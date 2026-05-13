@@ -1,56 +1,64 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. CONFIGURACIÓN VISUAL
-st.set_page_config(page_title="Nfq | CIB Talent Hub", layout="wide")
+# 1. CONFIGURACIÓN DE PÁGINA
+st.set_page_config(page_title="Nfq | CIB Talent Hub 3.1", layout="wide")
 
+# Estilo Corporativo
 st.markdown("""
 <style>
     .main { background-color: #ffffff; }
     .stSidebar { background-color: #001529; color: white; }
     h1 { color: #001529; font-family: 'Inter', sans-serif; }
-    .stButton>button { background-color: #ff6b00; color: white; width: 100%; border-radius: 5px; border: none; }
-    .stButton>button:hover { background-color: #e66000; color: white; }
+    .stButton>button { background-color: #ff6b00; color: white; width: 100%; border: none; height: 3em; font-weight: bold; }
+    .stButton>button:hover { background-color: #e66000; border: none; }
 </style>
 """, unsafe_allow_html=True)
 
-# 2. CONFIGURACIÓN DE LA IA
-api_key = st.sidebar.text_input("Introduce tu Gemini API Key", type="password")
+# 2. CONFIGURACIÓN DEL MOTOR GEMINI 3.1 PRO
+api_key = st.sidebar.text_input("Gemini API Key", type="password")
 
 if api_key:
     try:
         genai.configure(api_key=api_key)
         
-        # System Instruction detallada
+        # System Instructions (Copiadas de tu configuración de AI Studio)
         instruction = """
-        Eres el CIB Talent Manager de Nfq. Tu salida debe ser un Dashboard ejecutivo en Markdown.
-        Censo de Staff: Juan Pérez, Marta García, Carlos Ruiz, Marcos Fernández, Jorge Álvarez, Marina Sánchez, Elena Navarro, David López.
-        Reglas estéticas: 
-        - Usa tablas limpias con fondo blanco.
-        - Indica estados: [BLOQUEADO] en rojo para los evaluados, [DISPONIBLE] en verde para libres.
-        - Branding: Sidebar Azul Nfq (#001529), acentos Naranja (#ff6b00) y alertas en Rojo Santander (#ec0000).
+        Actúa como el CIB Talent Manager de Nfq. Tu interfaz es un Dashboard ejecutivo.
+        Censo Real: Juan Pérez, Marta García, Carlos Ruiz, Marcos Fernández, Jorge Álvarez, Marina Sánchez, Elena Navarro, David López.
+        
+        Lógica de Negocio:
+        - Dashboard: Resumen de métricas (8 personas total).
+        - Cohesión: Los estados [BLOQUEADO] (Rojo) y [DISPONIBLE] (Verde) deben ser consistentes entre pestañas.
+        - Estética: Tablas limpias, fondo blanco, estilo profesional Santander CIB.
         """
         
-        # SOLUCIÓN AL ERROR 404: Usamos el nombre del modelo con prefijo de versión
+        # ID TÉCNICO PARA GEMINI 3.1 PRO PREVIEW
         model = genai.GenerativeModel(
-            model_name="models/gemini-1.5-flash-latest",
+            model_name="gemini-3.1-pro-preview", 
             system_instruction=instruction
         )
 
-        # 3. INTERFAZ Y NAVEGACIÓN
+        # 3. INTERFAZ
         st.sidebar.title("CIB Talent Portal")
-        menu = st.sidebar.radio("Menú", ["Dashboard", "Staff Directory", "Opportunities", "Training Log"])
+        menu = st.sidebar.radio("Navegación:", ["Dashboard", "Staff Directory", "Opportunities", "Training Log"])
 
         st.title(f"🚀 {menu}")
 
-        # Botón de ejecución
-        if st.button(f"Cargar datos de {menu}"):
-            with st.spinner("Sincronizando con el motor de IA..."):
-                response = model.generate_content(f"Muestra la pestaña de {menu} actualizada con los datos del staff.")
+        if st.button(f"Sincronizar {menu}"):
+            with st.spinner("Consultando a Gemini 3.1 Pro..."):
+                # Bajamos temperatura para máxima precisión
+                response = model.generate_content(
+                    f"Genera la vista de {menu} para el staff actual.",
+                    generation_config={"temperature": 0.1}
+                )
                 st.markdown(response.text)
                 
     except Exception as e:
-        st.error(f"Error detectado: {e}")
+        st.error(f"Error de conexión con Gemini 3.1: {e}")
+            
+else:
+    st.sidebar.warning("⚠️ Introduce tu API Key")
             
 else:
     st.sidebar.warning("⚠️ Se requiere API Key")
