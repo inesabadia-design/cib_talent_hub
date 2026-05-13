@@ -31,8 +31,9 @@ if api_key:
         - Branding: Sidebar Azul Nfq (#001529), acentos Naranja (#ff6b00) y alertas en Rojo Santander (#ec0000).
         """
         
+        # SOLUCIÓN AL ERROR 404: Usamos el nombre del modelo con prefijo de versión
         model = genai.GenerativeModel(
-            model_name="gemini-1.5-flash",
+            model_name="models/gemini-1.5-flash-latest",
             system_instruction=instruction
         )
 
@@ -45,11 +46,11 @@ if api_key:
         # Botón de ejecución
         if st.button(f"Cargar datos de {menu}"):
             with st.spinner("Sincronizando con el motor de IA..."):
-                response = model.generate_content(f"Muestra la pestaña de {menu} actualizada.")
+                response = model.generate_content(f"Muestra la pestaña de {menu} actualizada con los datos del staff.")
                 st.markdown(response.text)
                 
     except Exception as e:
-        st.error(f"Hubo un error con la API: {e}")
+        st.error(f"Error detectado: {e}")
             
 else:
     st.sidebar.warning("⚠️ Se requiere API Key")
