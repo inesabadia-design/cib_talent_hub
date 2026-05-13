@@ -13,7 +13,7 @@ st.markdown("""
     .stButton>button { background-color: #ff6b00; color: white; border-radius: 5px; }
     .santander-card { border-left: 5px solid #ec0000; padding: 10px; background-color: #fcfcfc; margin-bottom: 10px; }
     </style>
-    """, unsafe_allow_stdio=True)
+   """, unsafe_allow_html=True)
 
 # 2. CONFIGURACIÓN DE LA IA (BACKEND)
 # En GitHub/Streamlit Cloud, deberás añadir tu API_KEY en "Secrets"
@@ -23,13 +23,22 @@ if api_key:
     genai.configure(api_key=api_key)
     
     # Instrucciones de Sistema (Tus System Instructions)
-    system_instruction = """
-    Actúa como el CIB Talent Manager de Nfq. Tu interfaz es un Dashboard interactivo.
-    Reglas:
-    - Usa tablas Markdown para Staff, Opportunities y Training.
-    - Mantén cohesión: 6 personas en staff, sincronizadas con los proyectos.
-    - Columna de estado: [BLOQUEADO] en rojo, [DISPONIBLE] en verde.
-    - Branding: Azul/Naranja Nfq y Rojo Santander para proyectos.
+   system_instruction = """
+    Actúa como el CIB Talent Manager de Nfq.
+    Censo Real del Staff (6 perfiles obligatorios):
+    1. Juan Pérez (Senior Consultant - Funcional)
+    2. Marta García (Consultant - Técnico)
+    3. Carlos Ruiz (Manager - Funcional)
+    4. Marcos Fernández (Associate - Funcional)
+    5. Jorge Álvarez (Senior Manager - Técnico)
+    6. Marina Sánchez (Senior Consultant - Técnico)
+    7. Elena Navarro (Manager - Técnico)
+    8. David López (Associate - Técnico)
+
+    Reglas de la Interfaz:
+    - Fondo blanco en tablas, Sidebar Azul Nfq (#001529).
+    - Columna de estado: [BLOQUEADO] para evaluados, [DISPONIBLE] para libres.
+    - El Dashboard debe resumir estas métricas exactamente.
     """
     
     model = genai.GenerativeModel(
