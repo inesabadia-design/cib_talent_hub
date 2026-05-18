@@ -1,7 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. CONFIGURACIÓN VISUAL (Fondo Blanco, Sidebar Azul Nfq)
+# 1. CONFIGURACIÓN VISUAL CORPORATIVA (Fondo Blanco, Sidebar Azul Nfq)
 st.set_page_config(page_title="Nfq | CIB Talent Hub 3.1", layout="wide")
 
 st.markdown("""
@@ -22,36 +22,37 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 2. CONFIGURACIÓN DEL MOTOR DE GOOGLE AI STUDIO
+# 2. CONFIGURACIÓN CONEXIÓN GOOGLE AI STUDIO (GEMINI 3.1)
 api_key = st.sidebar.text_input("Introduce tu Gemini API Key", type="password")
 
 if api_key:
     try:
-        # Conectamos con tu cuenta de AI Studio
+        # Vinculamos tu llave de API
         genai.configure(api_key=api_key)
         
-        # Estas son las System Instructions que te pide el formulario
+        # System Instructions para el rol de CIB Talent Manager
         instruction = """
         Actúa como el CIB Talent Manager de Nfq. Tu interfaz es un Dashboard ejecutivo en Markdown.
-        Censo Real del Staff:
-        1. Juan Pérez (Senior Consultant - Analista Funcional) -> Estado: [BLOQUEADO]
-        2. Marta García (Consultant - Desarrolladora Python) -> Estado: [EN EVALUACIÓN]
-        3. Carlos Ruiz (Manager - Jefe de Proyecto) -> Estado: [BLOQUEADO]
-        4. Marcos Fernández (Associate - Consultor Funcional) -> Estado: [DISPONIBLE]
-        5. Jorge Álvarez (Senior Manager - Arquitecto Java) -> Estado: [DISPONIBLE]
-        6. Marina Sánchez (Senior Consultant - Data Analyst) -> Estado: [DISPONIBLE]
-        7. Elena Navarro (Manager - Tech Lead) -> Estado: [DISPONIBLE]
-        8. David López (Associate - Data Scientist) -> Estado: [DISPONIBLE]
+        Censo Oficial del Staff (8 Consultores):
+        1. Juan Pérez (Senior Consultant - Analista Funcional) -> Estado: [BLOQUEADO] | Skills: Pagos
+        2. Marta García (Consultant - Desarrolladora Python) -> Estado: [EN EVALUACIÓN] | Skills: Python
+        3. Carlos Ruiz (Manager - Jefe de Proyecto) -> Estado: [BLOQUEADO] | Skills: Gestión, Riesgos
+        4. Marcos Fernández (Associate - Consultor Funcional) -> Estado: [DISPONIBLE] | Skills: Capital Markets, Regulatorio
+        5. Jorge Álvarez (Senior Manager - Arquitecto Java) -> Estado: [DISPONIBLE] | Skills: Java, Microservicios
+        6. Marina Sánchez (Senior Consultant - Data Analyst) -> Estado: [DISPONIBLE] | Skills: SQL, Power BI
+        7. Elena Navarro (Manager - Tech Lead) -> Estado: [DISPONIBLE] | Skills: React, TypeScript
+        8. David López (Associate - Data Scientist) -> Estado: [DISPONIBLE] | Skills: Python, Machine Learning
 
-        Reglas del Dashboard:
-        - Estructura los datos en tablas limpias de Markdown con fondo blanco.
-        - Muestra métricas coherentes con el censo de 8 personas.
-        - Usa colores corporativos: Azul Nfq (#001529) y Rojo Santander (#ec0000) para bloqueados.
+        Reglas estéticas de salida:
+        - Transforma las listas en tablas limpias de Markdown con fondo blanco (estilo Excel Premium).
+        - Usa el color Rojo Santander (#ec0000) para destacar perfiles [BLOQUEADO] o alertas críticas.
+        - Usa el color Verde para destacar perfiles [DISPONIBLE].
+        - Las métricas del Dashboard numérico deben calcularse basándose estrictamente en estos 8 perfiles.
         """
         
-        # Aquí llamamos al modelo Pro de tu AI Studio de forma correcta
+        # IDENTIFICADOR TÉCNICO OFICIAL DE GEMINI 3.1 PRO PREVIEW EN SDK
         model = genai.GenerativeModel(
-            model_name="gemini-1.5-pro",
+            model_name="gemini-3.1-pro-preview-0513",
             system_instruction=instruction
         )
 
@@ -61,19 +62,20 @@ if api_key:
 
         st.title(f"🚀 {menu}")
 
-        # El botón mágico que envía la orden a Google AI Studio
-        if st.button(f"Sincronizar Vista con AI Studio"):
-            with st.spinner("Sincronizando con el motor de Gemini 3.1 Pro..."):
-                # Enviamos el prompt dinámico
+        # Botón de ejecución conectado a la IA de Google
+        if st.button(f"Sincronizar Vista con Gemini 3.1 Pro"):
+            with st.spinner("Conectando con el motor Gemini 3.1 Pro Preview..."):
+                # Fijamos temperatura 0.1 para que sea estricto con los datos
                 response = model.generate_content(
-                    f"Muestra la sección de {menu} formateada según tus instrucciones de sistema.",
+                    f"Muestra la pestaña de {menu} estructurada según tus instrucciones de sistema.",
                     generation_config={"temperature": 0.1}
                 )
                 st.markdown(response.text)
                 
     except Exception as e:
-        st.error(f"Error detectado: {e}")
+        st.error(f"Error técnico en el motor 3.1: {e}")
+        st.info("Tip: Si el error persiste, comprueba que tu llave tiene habilitado el modelo 3.1 Pro Preview en Google AI Studio.")
             
 else:
-    st.sidebar.warning("⚠️ Se requiere API Key de AI Studio")
-    st.info("Introduce tu API Key en la barra lateral para conectar la web con la Inteligencia Artificial.")
+    st.sidebar.warning("⚠️ Se requiere API Key")
+    st.info("Introduce tu API Key en la barra lateral para conectar Streamlit con Gemini 3.1 Pro Preview.")
