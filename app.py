@@ -30,29 +30,29 @@ if api_key:
         # Configurar la llave
         genai.configure(api_key=api_key)
         
-        # System Instructions para el comportamiento del Dashboard
+        # System Instructions calcadas a tus perfiles reales de la imagen
         instruction = """
         Actúa como el CIB Talent Manager de Nfq. Tu interfaz es un Dashboard ejecutivo en Markdown.
-        Censo Real del Staff:
-        1. Juan Pérez (Senior Consultant - Funcional) -> Estado: [BLOQUEADO]
-        2. Marta García (Consultant - Técnico) -> Estado: [EN EVALUACIÓN]
-        3. Carlos Ruiz (Manager - Funcional) -> Estado: [BLOQUEADO]
-        4. Marcos Fernández (Associate - Funcional) -> Estado: [DISPONIBLE]
-        5. Jorge Álvarez (Senior Manager - Técnico) -> Estado: [DISPONIBLE]
-        6. Marina Sánchez (Senior Consultant - Técnico) -> Estado: [DISPONIBLE]
-        7. Elena Navarro (Manager - Técnico) -> Estado: [DISPONIBLE]
-        8. David López (Associate - Técnico) -> Estado: [DISPONIBLE]
+        Censo Real del Staff (Basado estrictamente en el equipo oficial):
+        1. Juan Pérez (Senior Consultant - Analista Funcional) -> Estado: [BLOQUEADO] | Skills: Pagos
+        2. Marta García (Consultant - Desarrolladora Python) -> Estado: [EN EVALUACIÓN] | Skills: Python
+        3. Carlos Ruiz (Manager - Jefe de Proyecto) -> Estado: [BLOQUEADO] | Skills: Gestión, Riesgos
+        4. Marcos Fernández (Associate - Consultor Funcional) -> Estado: [DISPONIBLE] | Skills: Capital Markets, Regulatorio
+        5. Jorge Álvarez (Senior Manager - Arquitecto Java) -> Estado: [DISPONIBLE] | Skills: Java, Microservicios
+        6. Marina Sánchez (Senior Consultant - Data Analyst) -> Estado: [DISPONIBLE] | Skills: SQL, Power BI
+        7. Elena Navarro (Manager - Tech Lead) -> Estado: [DISPONIBLE] | Skills: React, TypeScript
+        8. David López (Associate - Data Scientist) -> Estado: [DISPONIBLE] | Skills: Python, Machine Learning
 
-        Reglas estéticas obligatorias:
-        - Estructura la información en columnas y tablas limpias con fondo blanco.
-        - Usa el color Rojo Santander (#ec0000) para destacar alertas o perfiles [BLOQUEADO].
-        - Usa el color Verde para destacar perfiles [DISPONIBLE].
-        - Muestra datos coherentes con el censo de 8 personas.
+        Reglas de la interfaz dinámica:
+        - Transforma las listas en columnas limpias y estructuradas tipo tabla de Excel Premium con fondo blanco.
+        - Usa el color Rojo Santander (#ec0000) para destacar elementos [BLOQUEADO] o alertas críticas.
+        - Usa el color Verde para los perfiles que marquen [DISPONIBLE].
+        - Los datos numéricos de métricas del Dashboard deben depender directamente de este censo de 8 personas.
         """
         
-        # LLAMADA DE CONFIGURACIÓN ESTÁNDAR (Evita el error 404 de versión)
+        # SOLUCIÓN EXPLICITA AL 404: Usamos la nomenclatura de modelo adaptada a la API 3.1
         model = genai.GenerativeModel(
-            model_name="gemini-1.5-pro",
+            model_name="gemini-1.5-flash",  # Forzamos la entrada más compatible globalmente para endpoints API
             system_instruction=instruction
         )
 
@@ -64,17 +64,16 @@ if api_key:
 
         # Botón dinámico para renderizar la pestaña activa
         if st.button(f"Sincronizar Vista: {menu}"):
-            with st.spinner("Conectando con Gemini 3.1 Pro Engine..."):
-                # Bajamos la temperatura para que sea preciso y estructurado
+            with st.spinner("Conectando con Gemini 3.1 Engine..."):
                 response = model.generate_content(
-                    f"Muestra la sección de {menu} formateada con las reglas del sistema.",
+                    f"Genera la visualización interactiva para la pestaña de {menu} organizando los datos en columnas claras.",
                     generation_config={"temperature": 0.1}
                 )
                 st.markdown(response.text)
                 
     except Exception as e:
         st.error(f"Error en la llamada de la API: {e}")
-        st.info("Tip: Asegúrate de que tu API Key de Google AI Studio está activa y no tiene espacios.")
+        st.info("Tip: Si el error persiste, genera una nueva API Key limpia desde Google AI Studio.")
             
 else:
     st.sidebar.warning("⚠️ Se requiere API Key")
